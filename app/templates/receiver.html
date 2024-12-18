@@ -1,0 +1,14 @@
+<form id="receive-form">
+    <textarea id="encrypted-message" placeholder="Encrypted message"></textarea>
+    <button type="button" onclick="decryptMessage()">Decrypt</button>
+</form>
+<script>
+function decryptMessage() {
+    const encryptedMessage = document.getElementById("encrypted-message").value;
+    fetch('/receiver', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ encrypted_message: encryptedMessage })
+    }).then(res => res.json()).then(console.log);
+}
+</script>

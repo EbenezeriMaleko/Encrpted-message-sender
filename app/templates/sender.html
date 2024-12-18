@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Encrypted Message</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        #send-form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        textarea, input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #response {
+            margin-top: 20px;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        @media (max-width: 600px) {
+            #send-form {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form id="send-form">
+        <h1>Send Encrypted Message</h1>
+        <textarea id="message" placeholder="Enter your message" required></textarea>
+        <input type="text" id="receiver-ip" placeholder="Receiver's Public IP Address" required>
+        <textarea id="receiver-public-key" placeholder="Receiver's Public Key" required></textarea>
+        <button type="button" onclick="sendMessage()">Send</button>
+        <div id="response"></div>
+    </form>
+
+    <script>
+        function sendMessage() {
+            const message = document.getElementById("message").value;
+            const receiverIp = document.getElementById("receiver-ip").value;
+            const receiverPublicKey = document.getElementById("receiver-public-key").value;
+
+            fetch('/sender', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, receiver_ip: receiverIp, receiver_public_key: receiverPublicKey })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("response").innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(err => {
+                document.getElementById("response").innerText = "Error: " + err.message;
+            });
+        }
+    </script>
+</body>
+</html>
